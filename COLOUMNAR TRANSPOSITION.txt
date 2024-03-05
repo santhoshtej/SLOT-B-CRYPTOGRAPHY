@@ -1,0 +1,138 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+
+void encrypt(char *message, char *key) {
+    int len = strlen(message);
+    int keyLen = strlen(key);
+
+    
+    int columns = keyLen;
+
+  
+    int rows = (len + columns - 1) / columns;
+
+   
+    char matrix[rows][columns];
+
+  
+    int index = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            if (index < len)
+                matrix[i][j] = message[index++];
+            else
+                matrix[i][j] = 'X'; 
+        }
+    }
+
+   
+    int keyOrder[keyLen];
+    for (int i = 0; i < keyLen; i++) {
+        keyOrder[i] = i;
+    }
+
+    for (int i = 0; i < keyLen - 1; i++) {
+        for (int j = 0; j < keyLen - i - 1; j++) {
+            if (key[j] > key[j + 1]) {
+                
+                int temp = keyOrder[j];
+                keyOrder[j] = keyOrder[j + 1];
+                keyOrder[j + 1] = temp;
+
+                
+                for (int k = 0; k < rows; k++) {
+                    char tempChar = matrix[k][j];
+                    matrix[k][j] = matrix[k][j + 1];
+                    matrix[k][j + 1] = tempChar;
+                }
+            }
+        }
+    }
+
+   
+    index = 0;
+    for (int i = 0; i < columns; i++) {
+        for (int j = 0; j < rows; j++) {
+            if (matrix[j][keyOrder[i]] != 'X')
+                message[index++] = matrix[j][keyOrder[i]];
+        }
+    }
+    message[index] = '\0';
+}
+
+
+void decrypt(char *message, char *key) {
+    int len = strlen(message);
+    int keyLen = strlen(key);
+
+    int columns = keyLen;
+
+   
+    int rows = (len + columns - 1) / columns;
+
+  
+    char matrix[rows][columns];
+
+   
+    int fullColumns = len % columns;
+
+    
+    int padding = columns - fullColumns;
+
+    
+    int keyOrder[keyLen];
+    for (int i = 0; i < keyLen; i++) {
+        keyOrder[i] = i;
+    }
+
+    
+    for (int i = 0; i < keyLen - 1; i++) {
+        for (int j = 0; j < keyLen - i - 1; j++) {
+            if (key[j] > key[j + 1]) {
+               
+                int temp = keyOrder[j];
+                keyOrder[j] = keyOrder[j + 1];
+                keyOrder[j + 1] = temp;
+            }
+        }
+    }
+
+    
+    int index = 0;
+    for (int i = 0; i < columns; i++) {
+        int currentColumn = keyOrder[i];
+        for (int j = 0; j < rows; j++) {
+            if (j < (rows - 1) || (j >= (rows - 1) && currentColumn < fullColumns))
+                matrix[j][currentColumn] = message[index++];
+            else
+                matrix[j][currentColumn] = 'X'; 
+        }
+    }
+
+   
+    index = 0;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            if (matrix[i][j] != 'X')
+                message[index++] = matrix[i][j];
+        }
+    }
+    message[index] = '\0';
+}
+
+int main() {
+    char message[] = "CO1 defend the east wall of the castle";
+    char key[] = "GERMAN";
+
+    printf("Original Message: %s\n", message);
+
+    encrypt(message, key);
+    printf("Encrypted Message: %s\n", message);
+
+    decrypt(message, key);
+    printf("Decrypted Message: %s\n", message);
+
+    return 0;
+}
