@@ -1,0 +1,55 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+
+
+void encrypt(char *message, int key[3][3]) {
+    int len = strlen(message);
+    int vector[len];
+
+    
+    for (int i = 0; i < len; i++) {
+        vector[i] = message[i] - 'A';
+    }
+
+    
+    for (int i = 0; i < len; i += 3) {
+        for (int j = 0; j < 3; j++) {
+            int sum = 0;
+            for (int k = 0; k < 3; k++) {
+                sum += key[j][k] * vector[i + k];
+            }
+            vector[i + j] = sum % 26;
+        }
+    }
+
+    
+    for (int i = 0; i < len; i++) {
+        message[i] = vector[i] + 'A';
+    }
+}
+
+
+void decrypt(char *message, int key[3][3]) {
+    
+    encrypt(message, key);
+}
+
+int main() {
+    char message[] = "COMPUTER";
+    int key[3][3] = { {6, 24, 1}, {13, 16, 10}, {20, 17, 15} };
+
+    printf("Original Message: %s\n", message);
+
+    encrypt(message, key);
+    printf("Encrypted Message: %s\n", message);
+
+    // Reset the message for decryption
+    strcpy(message, "ACEPXRLF");
+
+    decrypt(message, key);
+    printf("Decrypted Message: %s\n", message);
+
+    return 0;
+}

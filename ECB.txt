@@ -1,0 +1,38 @@
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+void encryptBlock(char *plaintext, char *ciphertext)
+{
+strcpy(ciphertext, plaintext);
+
+}
+void decryptBlock(char *ciphertext, char *plaintext)
+{
+strcpy(plaintext, ciphertext);
+}
+void simulateTransmittedCiphertextError(char *ciphertext, int
+blockIndex)
+{
+ciphertext[blockIndex] ^= 0x01;
+}
+int main()
+{
+char P1[] = &quot;Hello, this is P1.&quot;;
+char P2[] = &quot;And this is P2.&quot;;
+char C1[20], C2[20];
+char C1_error[20], C2_error[20];
+encryptBlock(P1, C1);
+encryptBlock(P2, C2);
+printf(&quot;ECB Mode:\n&quot;);
+printf(&quot;Original C1: %s\n&quot;, C1);
+printf(&quot;Original C2: %s\n&quot;, C2);
+strcpy(C1_error, C1);
+simulateTransmittedCiphertextError(C1_error, 5);
+printf(&quot;Transmitted C1 with error: %s\n&quot;, C1_error);
+char P1_error[20];
+decryptBlock(C1_error, P1_error);
+printf(&quot;Decrypted P1 (with error): %s\n&quot;, P1_error);
+char P2_decrypted[20];
+decryptBlock(C2, P2_decrypted);
+printf(&quot;Decrypted P2: %s\n&quot;, P2_decrypted);
+return 0;
+}
