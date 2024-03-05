@@ -1,0 +1,37 @@
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+void encrypt(const char *plaintext, const
+int *key, char *ciphertext) {
+int plaintextLen = strlen(plaintext);
+int i;
+for (i = 0; i &lt; plaintextLen; i++) {
+ciphertext[i] = (plaintext[i] - &#39;A&#39; +
+key[i]) % 26 + &#39;A&#39;;
+}
+ciphertext[plaintextLen] = &#39;\0&#39;;
+}
+void decrypt(const char *ciphertext, const
+int *key, char *plaintext) {
+int ciphertextLen = strlen(ciphertext),i;
+for (i = 0; i &lt; ciphertextLen; i++) {
+plaintext[i] = (ciphertext[i] - &#39;A&#39; - key[i]
++ 26) % 26 + &#39;A&#39;;
+}
+plaintext[ciphertextLen] = &#39;\0&#39;;
+}
+int main() {
+
+const char *plaintext =
+&quot;SENDMOREMONEY&quot;;
+int key[] = {9, 0, 1, 7, 23, 15, 21, 14, 11,
+11, 2, 8, 9};
+char ciphertext[strlen(plaintext) + 1];
+encrypt(plaintext, key, ciphertext);
+printf(&quot;Ciphertext: %s\n&quot;, ciphertext);
+char decryptedText[strlen(plaintext) +
+1];
+decrypt(ciphertext, key, decryptedText);
+printf(&quot;Decrypted Text: %s\n&quot;,
+decryptedText);
+return 0;
+}

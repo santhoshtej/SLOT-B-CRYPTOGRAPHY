@@ -1,0 +1,45 @@
+
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+typedef unsigned char byte;
+void generateRoundKeys(byte key, byte *k1, byte *k2) {
+*k1 = 0xF3;
+*k2 = 0xE3;
+}
+byte sdesEncrypt(byte plaintext, byte key) {
+byte k1, k2;
+generateRoundKeys(key, &amp;k1, &amp;k2);
+return plaintext ^ k1;
+}
+void ctrEncrypt(byte *plaintext, byte key, int length) {
+byte counter = 0x00;
+int i;
+for ( i = 0; i &lt; length; i++) {
+byte encrypted = sdesEncrypt(counter, key);
+plaintext[i] ^= encrypted;
+counter++;
+}
+}
+int main() {
+byte key = 0xFD;
+byte plaintext[] = {0x01, 0x02, 0x04};
+int length = sizeof(plaintext);
+
+int i;
+printf(&quot;Plaintext: &quot;);
+for ( i = 0; i &lt; length; i++) {
+printf(&quot;%02X &quot;, plaintext[i]);
+}
+ctrEncrypt(plaintext, key, length);
+printf(&quot;\nEncrypted: &quot;);
+for (i = 0; i &lt; length; i++) {
+printf(&quot;%02X &quot;, plaintext[i]);
+}
+ctrEncrypt(plaintext, key, length);
+printf(&quot;\nDecrypted: &quot;);
+for (i = 0; i &lt; length; i++) {
+printf(&quot;%02X &quot;, plaintext[i]);
+}
+printf(&quot;\n&quot;);
+return 0;
+}

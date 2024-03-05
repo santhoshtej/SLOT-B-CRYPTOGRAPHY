@@ -1,0 +1,70 @@
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+void decryptPlayfair(char
+message[], char key[]) {
+int i, j;
+char matrix[5][5];
+int keyIndex = 0;
+for (i = 0; i &lt; 5; i++) {
+for (j = 0; j &lt; 5; j++) {
+matrix[i][j] =
+key[keyIndex++];
+}
+}
+for (i = 0; i &lt;
+strlen(message); i += 2) {
+char c1 = message[i];
+char c2 = message[i +
+1];
+int r1, c1_index, r2,
+c2_index;
+for (j = 0; j &lt; 5; j++) {
+for (int k = 0; k &lt; 5;
+k++) {
+if (matrix[j][k] ==
+c1) {
+r1 = j;
+c1_index = k;
+}
+if (matrix[j][k] ==
+c2) {
+r2 = j;
+c2_index = k;
+}
+
+}
+}
+if (r1 == r2) {
+printf(&quot;%c%c&quot;,
+matrix[r1][(c1_index + 4) %
+5], matrix[r2][(c2_index + 4)
+% 5]);
+} else if (c1_index ==
+c2_index) {
+printf(&quot;%c%c&quot;,
+matrix[(r1 + 4) %
+5][c1_index], matrix[(r2 + 4)
+% 5][c2_index]);
+} else {
+printf(&quot;%c%c&quot;,
+matrix[r1][c2_index],
+matrix[r2][c1_index]);
+}
+}
+printf(&quot;\n&quot;);
+}
+int main() {
+char message[] =
+&quot;KXJEYUREBEZWEHEWR
+YTUHEYFSKREHEGOYFI
+WTTTUOLKSYCAJPOBOT
+EIZONTXBYBNTGONEYC
+UZWRGDSONSXBOUYWR
+HEBAAHYUSEDQ&quot;;
+char key[] =
+&quot;PLAYFIREXMBCDGHKN
+OQSTUVWZ&quot;;
+decryptPlayfair(message,
+key);
+return 0;
+}

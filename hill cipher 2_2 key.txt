@@ -1,0 +1,60 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;ctype.h&gt;
+#include &lt;math.h&gt;
+#define MAX_LEN 100
+int charToNum(char c) {
+if (isupper(c)) {
+return c - &#39;A&#39;;
+} else if (islower(c)) {
+return c - &#39;a&#39;;
+}
+return -1;
+}
+char numToChar(int num) {
+return num + &#39;A&#39;;
+
+}
+void encryptHill(char *text, int *keyMatrix, int keySize) {
+int i,j,k,textLen = strlen(text);
+int encrypted[MAX_LEN] = {0};
+for ( i = 0; i &lt; textLen; i += keySize) {
+for ( j = 0; j &lt; keySize; j++) {
+int sum = 0;
+for (k = 0; k &lt; keySize; k++) {
+sum += keyMatrix[j * keySize + k] * charToNum(text[i + k]); }
+encrypted[i + j] = sum % 26;
+}
+}
+for (i = 0; i &lt; textLen; i++) {
+text[i] = numToChar(encrypted[i]);
+}
+}
+int main() {
+char plaintext[MAX_LEN];
+int keySize;
+printf(&quot;Enter the plaintext: &quot;);
+gets(plaintext);
+printf(&quot;Enter the size of the key matrix: &quot;);
+scanf(&quot;%d&quot;, &amp;keySize);
+int i,j,keyMatrix[MAX_LEN * MAX_LEN];
+printf(&quot;Enter the key matrix (row by row):\n&quot;);
+for ( i = 0; i &lt; keySize; i++) {
+for ( j = 0; j &lt; keySize; j++) {
+scanf(&quot;%d&quot;, &amp;keyMatrix[i * keySize + j]);
+}
+}
+int textLen = strlen(plaintext);
+int padding = keySize - (textLen % keySize);
+if (padding &lt; keySize) {
+for ( i = 0; i &lt; padding; i++) {
+plaintext[textLen + i] = &#39;X&#39;;
+}
+plaintext[textLen + padding] = &#39;\0&#39;;
+}
+encryptHill(plaintext, keyMatrix, keySize);
+printf(&quot;Encrypted text: %s\n&quot;, plaintext);
+
+return 0;
+}

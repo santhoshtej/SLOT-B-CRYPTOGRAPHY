@@ -1,0 +1,42 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;math.h&gt;
+
+unsigned long long mod_exp(unsigned long long base, unsigned long long exp, unsigned long
+long modulus) {
+unsigned long long result = 1;
+base %= modulus;
+while (exp &gt; 0) {
+if (exp &amp; 1) {
+result = (result * base) % modulus;
+}
+base = (base * base) % modulus;
+exp &gt;&gt;= 1;
+}
+return result;
+}
+unsigned long long encrypt(unsigned long long character, unsigned long long e, unsigned long
+long n) {
+return mod_exp(character, e, n);
+}
+int main() {
+unsigned long long p, q, n, phi, e, character;
+char message[1000];
+p = 9973; // Example prime numbers (should be much larger in practice)
+q = 9857;
+n = p * q;
+phi = (p - 1) * (q - 1);
+e = 65537;
+int i;
+printf(&quot;Enter the message (all uppercase letters without spaces): &quot;);
+scanf(&quot;%s&quot;, message);
+printf(&quot;Encrypted message: &quot;);
+for ( i = 0; message[i] != &#39;\0&#39;; i++) {
+character = message[i] - &#39;A&#39;; // Convert character to number (A=0, B=1, ..., Z=25)
+unsigned long long encrypted_char = encrypt(character, e, n);
+printf(&quot;%llu &quot;, encrypted_char);
+}
+printf(&quot;\n&quot;);
+
+return 0;
+}

@@ -1,0 +1,69 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;ctype.h&gt;
+
+#define ALPHABET_SIZE 26
+
+
+
+void decrypt(char *ciphertext, int shift) {
+int length = strlen(ciphertext);
+int i;
+for ( i = 0; i &lt; length; i++) {
+if (isalpha(ciphertext[i])) {
+if (isupper(ciphertext[i])) {
+ciphertext[i] = &#39;A&#39; + (ciphertext[i] - &#39;A&#39; - shift + ALPHABET_SIZE) % ALPHABET_SIZE;
+} else {
+ciphertext[i] = &#39;a&#39; + (ciphertext[i] - &#39;a&#39; - shift + ALPHABET_SIZE) % ALPHABET_SIZE; }
+}
+}
+}
+
+
+void countLetterFrequency(char *text, int *frequency) {
+int length = strlen(text);
+int i;
+
+for (i = 0; i &lt; length; i++) {
+if (isalpha(text[i])) {
+if (isupper(text[i])) {
+frequency[text[i] - &#39;A&#39;]++;
+} else {
+frequency[text[i] - &#39;a&#39;]++;
+}
+}
+}
+}
+
+
+
+match int findShiftValue(int *frequency) {
+int maxFrequency = 0;
+int shift = 0;
+int i;
+for ( i = 0; i &lt; ALPHABET_SIZE; i++) {
+if (frequency[i] &gt; maxFrequency) {
+maxFrequency = frequency[i];
+shift = (ALPHABET_SIZE - i) % ALPHABET_SIZE; }
+}
+
+return shift;
+}
+
+int main() {
+char ciphertext[1000];
+printf(&quot;Enter the ciphertext: &quot;);
+fgets(ciphertext, sizeof(ciphertext), stdin);
+int i;
+
+int letterFrequency[ALPHABET_SIZE] = {0};
+countLetterFrequency(ciphertext, letterFrequency);
+int shift = findShiftValue(letterFrequency);
+printf(&quot;Possible plaintexts in order of likelihood:\n&quot;);
+for (i = 0; i &lt; 10; i++) {
+decrypt(ciphertext, shift);
+printf(&quot;%d. %s\n&quot;, i + 1, ciphertext);
+}
+
+return 0; }

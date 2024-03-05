@@ -1,0 +1,18 @@
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+unsigned long long factorial(int n) {
+if (n &lt;= 1)
+return 1;
+return n * factorial(n - 1);
+}
+
+int main() {
+int keyLength = 25;
+unsigned long long totalPossibleKeys = factorial(keyLength);
+printf(&quot;Total possible keys (without considering identical encryption results): %llu\n&quot;,
+totalPossibleKeys);
+unsigned long long effectivelyUniqueKeys = totalPossibleKeys / keyLength;
+printf(&quot;Effectively unique keys (considering identical encryption results): %llu\n&quot;,
+effectivelyUniqueKeys);
+return 0;
+}

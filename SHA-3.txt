@@ -1,0 +1,45 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+#include &lt;stdint.h&gt;
+#define STATE_SIZE 25
+#define CAPACITY_LANES 16
+#define LANE_SIZE 64
+typedef struct {
+uint64_t state[STATE_SIZE];
+} InternalState;
+void initializeState(InternalState *state)
+{
+for (int i = 0; i &lt; STATE_SIZE; i++)
+{
+state-&gt;state[i] = 0;
+}
+}
+int allCapacityLanesNonzero(InternalState *state)
+{
+for (int i = 0; i &lt; CAPACITY_LANES; i++)
+{
+if (state-&gt;state[i] == 0)
+{
+return 0;
+}
+}
+return 1;
+}
+int main()
+{
+InternalState state;
+initializeState(&amp;state);
+srand(time(NULL));
+int steps = 0;
+while (!allCapacityLanesNonzero(&amp;state))
+
+{
+int laneToUpdate = rand() % CAPACITY_LANES;
+int bitPosition = rand() % LANE_SIZE;
+state.state[laneToUpdate] |= (1ULL &lt;&lt; bitPosition);
+steps++;
+}
+printf(&quot;All capacity lanes have at least one nonzero bit after %d steps.\n&quot;, steps);
+return 0;
+}

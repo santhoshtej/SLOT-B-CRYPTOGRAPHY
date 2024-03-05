@@ -1,0 +1,49 @@
+#include &lt;stdio.h&gt;
+#include &lt;stdint.h&gt;
+uint64_t mod_pow(uint64_t base, uint64_t exponent, uint64_t
+modulus) {
+uint64_t result = 1;
+base = base % modulus;
+while (exponent &gt; 0)
+{
+if (exponent % 2 == 1)
+{
+
+result = (result * base) % modulus;
+}
+exponent &gt;&gt;= 1;
+base = (base * base) % modulus;
+}
+return result;
+}
+int main()
+{
+uint64_t n = 12345678901;
+uint64_t e = 65537;
+uint64_t d = 123456789;
+int i;
+
+char message[] = &quot;HELLO&quot;;
+int message_length = sizeof(message) - 1;
+printf(&quot;Original Message: %s\n&quot;, message);
+printf(&quot;Encrypted Message: &quot;);
+for (i = 0; i &lt; message_length; i++)
+
+{
+
+uint64_t encrypted = mod_pow(message[i] - &#39;A&#39;, e, n);
+printf(&quot;%llu &quot;, encrypted);
+}
+printf(&quot;\n&quot;);
+printf(&quot;Decrypted Message: &quot;);
+for (i = 0; i &lt; message_length; i++)
+
+{
+
+uint64_t encrypted = mod_pow(message[i] - &#39;A&#39;, e, n);
+uint64_t decrypted = mod_pow(encrypted, d, n) + &#39;A&#39;;
+printf(&quot;%c&quot;, (char)decrypted);
+}
+printf(&quot;\n&quot;);
+return 0;
+}
